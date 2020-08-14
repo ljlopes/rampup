@@ -11,7 +11,7 @@ public class Auctioneer {
     public void evaluate(Auction auction){
         for(Bid bid : auction.getBids()){
             if(bid.getValue() > highestOfAll)highestOfAll = bid.getValue();
-            else if(bid.getValue() < lowestOfAll) lowestOfAll = bid.getValue();
+            if(bid.getValue() < lowestOfAll) lowestOfAll = bid.getValue();
         }
     }
 

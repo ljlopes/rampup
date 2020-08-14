@@ -4,10 +4,13 @@ import auction.domain.Auction;
 import auction.domain.Bid;
 import auction.domain.User;
 import auction.service.Auctioneer;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class AuctioneerTest {
 
-    public static void main(String[] args) {
+    @Test
+    public void shouldRecognizeBidsInAscendingOrder() {
 
         User jhon = new User("Jhon");
         User mark = new User("Mark");
@@ -22,8 +25,11 @@ public class AuctioneerTest {
         Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
-        System.out.println(auctioneer.getHighestBid());
-        System.out.println(auctioneer.getLowestBid());
+        double highestExpected = 4000.00;
+        double lowestExpected = 1500.00;
+
+        assertEquals(highestExpected, auctioneer.getHighestBid(), 0.00001);
+        assertEquals(lowestExpected, auctioneer.getLowestBid(), 0.00001);
 
     }
 }
