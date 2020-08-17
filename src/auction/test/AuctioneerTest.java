@@ -131,4 +131,30 @@ public class AuctioneerTest {
         assertEquals(700.0, auctioneer.getHighestBid(), 0.0001);
 
     }
+
+    @Test
+    public void shouldRecognizeBidsInDescendingOrder() {
+
+        User jhon = new User("Jhon");
+        User mark = new User("Mark");
+        User ana = new User("Ana");
+
+        Auction auction = new Auction("Playstation 5");
+
+        auction.propose(new Bid(jhon, 400.0));
+        auction.propose(new Bid(mark, 200.00));
+        auction.propose(new Bid(ana, 100.00));
+
+        Auctioneer auctioneer = new Auctioneer();
+        auctioneer.evaluate(auction);
+
+        double highestExpected = 400.0;
+        double lowestExpected = 100.0;
+
+        assertEquals(highestExpected, auctioneer.getHighestBid(), 0.00001);
+        assertEquals(lowestExpected, auctioneer.getLowestBid(), 0.00001);
+
+    }
 }
+
+
