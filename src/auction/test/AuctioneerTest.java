@@ -165,7 +165,8 @@ public class AuctioneerTest {
         auctioneer.evaluate(auction);
 
         List<Bid> threeHighest = auctioneer.getThreeHighest();
-        assertNull(threeHighest);
+
+        assertEquals(0, threeHighest.size());
     }
 
     @Test
