@@ -109,4 +109,26 @@ public class AuctioneerTest {
         assertEquals(3000.0, threeHighest.get(2).getValue());
 
     }
+
+    @Test
+    public void shouldRecognizeRandomBids(){
+
+        User jhon = new User("Jhon");
+
+        Auction auction = new Auction("Drone");
+
+        auction.propose(new Bid(jhon, 200.0));
+        auction.propose(new Bid(jhon, 450.0));
+        auction.propose(new Bid(jhon, 120.0));
+        auction.propose(new Bid(jhon, 700.0));
+        auction.propose(new Bid(jhon, 630.0));
+        auction.propose(new Bid(jhon, 230.0));
+
+        Auctioneer auctioneer = new Auctioneer();
+        auctioneer.evaluate(auction);
+
+        assertEquals(120.0, auctioneer.getLowestBid(), 0.0001);
+        assertEquals(700.0, auctioneer.getHighestBid(), 0.0001);
+
+    }
 }
