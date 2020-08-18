@@ -3,9 +3,11 @@ package auction.test;
 import auction.builder.AuctionCreator;
 import auction.domain.*;
 import auction.service.Auctioneer;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class AuctioneerTest {
     private User ana;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         this.auctioneer = new Auctioneer();
         this.jhon = new User("Jhon");
         this.mark = new User("Mark");
@@ -45,7 +47,7 @@ public class AuctioneerTest {
     }
 
     @Test
-    public void shouldCalculateAverageValueOfBids(){
+    public void shouldCalculateAverageValueOfBids() {
 
         Auction auction = new AuctionCreator()
                 .to("Headphone Bluetooth JBL")
@@ -56,21 +58,11 @@ public class AuctioneerTest {
 
         auctioneer.evaluate(auction);
 
-        assertEquals( 200.00, auctioneer.getAverage(), 0.0001);
+        assertEquals(200.00, auctioneer.getAverage(), 0.0001);
     }
-
+    
     @Test
-    public void shouldCalculateAverageValueOfZeroBids(){
-
-        Auction auction = new Auction("Iphone 11");
-
-        auctioneer.evaluate(auction);
-
-        assertEquals(0, auctioneer.getAverage(), 0.0001);
-    }
-
-    @Test
-    public void shouldRecognizeAuctionWithJustOneBid(){
+    public void shouldRecognizeAuctionWithJustOneBid() {
 
         Auction auction = new AuctionCreator()
                 .to("Playstation 5")
@@ -84,7 +76,7 @@ public class AuctioneerTest {
     }
 
     @Test
-    public void shouldRecognizeThreeHighestOfFiveBids(){
+    public void shouldRecognizeThreeHighestOfFiveBids() {
 
         Auction auction = new AuctionCreator()
                 .to("Iphone 11")
@@ -105,7 +97,7 @@ public class AuctioneerTest {
     }
 
     @Test
-    public void shouldRecognizeRandomBids(){
+    public void shouldRecognizeRandomBids() {
 
         Auction auction = new AuctionCreator()
                 .to("Drone")
@@ -143,19 +135,7 @@ public class AuctioneerTest {
     }
 
     @Test
-    public void shouldRecognizeThreeHighestOfZeroBids(){
-
-        Auction auction = new Auction("Iphone 11");
-
-        auctioneer.evaluate(auction);
-
-        List<Bid> threeHighest = auctioneer.getThreeHighest();
-
-        assertEquals(0, threeHighest.size());
-    }
-
-    @Test
-    public void shouldRecognizeThreeHighestOfTwoBids(){
+    public void shouldRecognizeThreeHighestOfTwoBids() {
 
         Auction auction = new AuctionCreator()
                 .to("Iphone 11")
@@ -169,6 +149,20 @@ public class AuctioneerTest {
         assertEquals(2, threeHighest.size());
         assertEquals(1800.0, threeHighest.get(0).getValue());
         assertEquals(1000.0, threeHighest.get(1).getValue());
+    }
+
+    @Test
+    public void shouldNotEvaluateAuctionWithoutBids() {
+        Auction auction = new AuctionCreator().to("Playstation 5").build();
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            auctioneer.evaluate(auction);
+        });
+
+        String expectedMessage = "It is not possible evaluate a auction without bids!";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage, actualMessage);
     }
 }
 
