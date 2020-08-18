@@ -3,7 +3,6 @@ package auction.service;
 import auction.domain.Auction;
 import auction.domain.Bid;
 
-import javax.swing.text.html.StyleSheet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

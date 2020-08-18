@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/auction/auction.iml" filepath="$PROJECT_DIR$/auction/auction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rampup.iml" filepath="$PROJECT_DIR$/rampup.iml" />
     </modules>
   </component>
 </project>
