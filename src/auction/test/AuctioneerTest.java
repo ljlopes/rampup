@@ -1,31 +1,40 @@
 package auction.test;
 
-import auction.domain.Auction;
-import auction.domain.Bid;
-import auction.domain.User;
+import auction.builder.AuctionCreator;
+import auction.domain.*;
 import auction.service.Auctioneer;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AuctioneerTest {
 
+    private Auctioneer auctioneer;
+    private User jhon;
+    private User mark;
+    private User ana;
+
+    @BeforeEach
+    public void setup(){
+        this.auctioneer = new Auctioneer();
+        this.jhon = new User("Jhon");
+        this.mark = new User("Mark");
+        this.ana = new User("Ana");
+    }
+
     @Test
     public void shouldRecognizeBidsInAscendingOrder() {
 
-        User jhon = new User("Jhon");
-        User mark = new User("Mark");
-        User ana = new User("Ana");
+        Auction auction = new AuctionCreator()
+                .to("Playstation 5")
+                .bid(jhon, 1500.00)
+                .bid(mark, 2000.00)
+                .bid(ana, 4000.00)
+                .build();
 
-        Auction auction = new Auction("Playstation 5");
-
-        auction.propose(new Bid(jhon, 1500.0));
-        auction.propose(new Bid(mark, 2000.00));
-        auction.propose(new Bid(ana, 4000.00));
-
-        Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
         double highestExpected = 4000.00;
@@ -33,23 +42,17 @@ public class AuctioneerTest {
 
         assertEquals(highestExpected, auctioneer.getHighestBid(), 0.00001);
         assertEquals(lowestExpected, auctioneer.getLowestBid(), 0.00001);
-
     }
 
     @Test
     public void shouldCalculateAverageValueOfBids(){
 
-        User jhon = new User("Jhon");
-        User mark = new User("Mark");
-        User ana = new User("Ana");
-
-        Auction auction = new Auction("Headphone Bluetooth JBL");
-
-        auction.propose(new Bid(jhon, 350.00));
-        auction.propose(new Bid(mark, 100.00));
-        auction.propose(new Bid(ana, 150.00));
-
-        Auctioneer auctioneer = new Auctioneer();
+        Auction auction = new AuctionCreator()
+                .to("Headphone Bluetooth JBL")
+                .bid(jhon, 350.00)
+                .bid(mark, 100.00)
+                .bid(ana, 150.00)
+                .build();
 
         auctioneer.evaluate(auction);
 
@@ -59,11 +62,7 @@ public class AuctioneerTest {
     @Test
     public void shouldCalculateAverageValueOfZeroBids(){
 
-        User jhon = new User("Jhon");
-
         Auction auction = new Auction("Iphone 11");
-
-        Auctioneer auctioneer = new Auctioneer();
 
         auctioneer.evaluate(auction);
 
@@ -73,34 +72,29 @@ public class AuctioneerTest {
     @Test
     public void shouldRecognizeAuctionWithJustOneBid(){
 
-        User jhon = new User("Jhon");
+        Auction auction = new AuctionCreator()
+                .to("Playstation 5")
+                .bid(jhon, 1000.0)
+                .build();
 
-        Auction auction = new Auction("Playstation 5");
-
-        auction.propose(new Bid(jhon, 1000.0));
-
-        Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
         assertEquals(1000.0, auctioneer.getHighestBid(), 0.0001);
         assertEquals(1000.0, auctioneer.getLowestBid(), 0.0001);
-
     }
 
     @Test
     public void shouldRecognizeThreeHighestOfFiveBids(){
 
-        User jhon = new User("Jhon");
-        User ana = new User("Ana");
+        Auction auction = new AuctionCreator()
+                .to("Iphone 11")
+                .bid(jhon, 2000.0)
+                .bid(ana, 3000.0)
+                .bid(jhon, 5000.0)
+                .bid(mark, 4500.0)
+                .bid(ana, 1000.0)
+                .build();
 
-        Auction auction = new Auction("Iphone 11");
-        auction.propose(new Bid(jhon, 2000.0));
-        auction.propose(new Bid(ana, 3000.0));
-        auction.propose(new Bid(jhon, 5000.0));
-        auction.propose(new Bid(jhon, 4500.0));
-        auction.propose(new Bid(ana, 1000.0));
-
-        Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
         List<Bid> threeHighest = auctioneer.getThreeHighest();
@@ -113,39 +107,32 @@ public class AuctioneerTest {
     @Test
     public void shouldRecognizeRandomBids(){
 
-        User jhon = new User("Jhon");
+        Auction auction = new AuctionCreator()
+                .to("Drone")
+                .bid(jhon, 200.0)
+                .bid(mark, 450.0)
+                .bid(jhon, 120.0)
+                .bid(mark, 700.0)
+                .bid(jhon, 630.0)
+                .bid(mark, 230.0)
+                .build();
 
-        Auction auction = new Auction("Drone");
-
-        auction.propose(new Bid(jhon, 200.0));
-        auction.propose(new Bid(jhon, 450.0));
-        auction.propose(new Bid(jhon, 120.0));
-        auction.propose(new Bid(jhon, 700.0));
-        auction.propose(new Bid(jhon, 630.0));
-        auction.propose(new Bid(jhon, 230.0));
-
-        Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
         assertEquals(120.0, auctioneer.getLowestBid(), 0.0001);
         assertEquals(700.0, auctioneer.getHighestBid(), 0.0001);
-
     }
 
     @Test
     public void shouldRecognizeBidsInDescendingOrder() {
 
-        User jhon = new User("Jhon");
-        User mark = new User("Mark");
-        User ana = new User("Ana");
+        Auction auction = new AuctionCreator()
+                .to("Playstation 5")
+                .bid(jhon, 400.0)
+                .bid(mark, 200.00)
+                .bid(ana, 100.00)
+                .build();
 
-        Auction auction = new Auction("Playstation 5");
-
-        auction.propose(new Bid(jhon, 400.0));
-        auction.propose(new Bid(mark, 200.00));
-        auction.propose(new Bid(ana, 100.00));
-
-        Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
         double highestExpected = 400.0;
@@ -153,7 +140,6 @@ public class AuctioneerTest {
 
         assertEquals(highestExpected, auctioneer.getHighestBid(), 0.00001);
         assertEquals(lowestExpected, auctioneer.getLowestBid(), 0.00001);
-
     }
 
     @Test
@@ -161,7 +147,6 @@ public class AuctioneerTest {
 
         Auction auction = new Auction("Iphone 11");
 
-        Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
         List<Bid> threeHighest = auctioneer.getThreeHighest();
@@ -172,15 +157,12 @@ public class AuctioneerTest {
     @Test
     public void shouldRecognizeThreeHighestOfTwoBids(){
 
-        User jhon = new User("Jhon");
-        User ana = new User("Ana");
+        Auction auction = new AuctionCreator()
+                .to("Iphone 11")
+                .bid(jhon, 1000.0)
+                .bid(mark, 1800.0)
+                .build();
 
-        Auction auction = new Auction("Iphone 11");
-
-        auction.propose(new Bid(jhon, 1000.0));
-        auction.propose(new Bid(ana, 1800.0));
-
-        Auctioneer auctioneer = new Auctioneer();
         auctioneer.evaluate(auction);
 
         List<Bid> threeHighest = auctioneer.getThreeHighest();

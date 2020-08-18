@@ -15,7 +15,26 @@ public class Auction {
     }
 
     public void propose(Bid bid){
-        bids.add(bid);
+        if(bids.isEmpty() || canBid(bid.getUser())) {
+            bids.add(bid);
+        }
+    }
+
+    private boolean canBid(User user) {
+        return (!getLastBid().getUser().equals(user)) && getTotalOfBidsByUser(user) < 5;
+    }
+
+    private int getTotalOfBidsByUser(User user) {
+        int total=0;
+
+        for (Bid b: bids) {
+            if(b.getUser().equals(user)) total++;
+        }
+        return total;
+    }
+
+    private Bid getLastBid() {
+        return bids.get(bids.size() - 1);
     }
 
     public String getDescription(){
