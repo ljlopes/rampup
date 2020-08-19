@@ -1,11 +1,11 @@
 package rampup.maven;
 
-public class Produto{
+public class Product {
 
     private final String nome;
     private final double preço;
 
-    public Produto(String nome, double preço) {
+    public Product(String nome, double preço) {
         this.nome = nome;
         this.preço = preço;
     }
